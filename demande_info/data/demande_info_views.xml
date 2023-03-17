@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="demande_information_action" model="ir.actions.act_window">
+            <field name="name">Demande Information</field>
+            <field name="res_model">demande.information</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+    </data>
+</odoo>
