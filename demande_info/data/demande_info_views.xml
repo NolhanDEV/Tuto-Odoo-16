@@ -4,7 +4,35 @@
         <record id="demande_information_action" model="ir.actions.act_window">
             <field name="name">Demande Information</field>
             <field name="res_model">demande.information</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="context">{'search_default_group_nom': 1}</field>
+            <field name="context">{'search_default_group_societe': 1}</field>
+            <field name="context">{'search_default_group_date': 1}</field>
+            <field name="context">{'search_default_group_mail': 1}</field>
+            <field name="context">{'search_default_group_object': 1}</field>
+            <field name="context">{'search_default_group_priority': 1}</field>
+            <field name="context">{'search_default_group_equipe_id': 1}</field>
+            <field name="context">{'search_default_group_status': 1}</field>
+            <field name="context">{'search_default_group_tel': 1}</field>
+        </record>
+
+        <record id="demande_information_search" model="ir.ui.view">
+            <field name="name">Demande Information Search</field>
+            <field name="model">demande.information</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter name="nom" string="Nom" icon="terp-partner" context="{'group_by':'nom'}"/>
+                    <filter name="societe" string="Societe" icon="terp-partner" context="{'group_by':'societe'}"/>
+                    <filter name="date" string="Date" icon="terp-partner" context="{'group_by':'date'}"/>
+                    <filter name="mail" string="Mail" icon="terp-partner" context="{'group_by':'mail'}"/>
+                    <filter name="object" string="Object" icon="terp-partner" context="{'group_by':'object'}"/>
+                    <filter name="priority" string="Priority" icon="terp-partner" context="{'group_by':'priority'}"/>
+                    <filter name="equipe_id" string="Equipe" icon="terp-partner" context="{'group_by':'equipe_id'}"/>
+                    <filter name="status" string="Status" icon="terp-partner" context="{'group_by':'status'}"/>
+                    <filter name="tel" string="Tel" icon="terp-partner" context="{'group_by':'tel'}"/>
+
+                </search>
+            </field>
         </record>
 
         <record id="demande_information_view" model="ir.ui.view">
@@ -12,11 +40,13 @@
             <field name="model">demande.information</field>
             <field name="arch" type="xml">
                 <tree>
+                    <field name="object"/>
                     <field name="nom"/>
                     <field name="prenom"/>
                     <field name="societe"/>
                     <field name="tel"/>
                     <field name="mail"/>
+                    <field name="status"/>
                 </tree>
             </field>
         </record>
@@ -27,27 +57,74 @@
             <field name="arch" type="xml">
                 <form string="Test">
                     <sheet>
-                        <group>
-                            <group>
+                        <group colspan="4" col="4">
+                            <group colspan="2">
                                 <field name="nom"/>
                                 <field name="prenom"/>
+                                <field name="date"/>
                                 <field name="societe"/>
                                 <field name="tel" widget="phone" options="{'enable_sms':false}"/>
                                 <field name="mail" widget="email"/>
-                                <field name="date"/>
-                                <field name="statut"/>
+                            </group>
+                            <group colspan="2">
+                                <field name="object"/>
+                                <field name="equipe_id"/>
+                                <field name="priority" widget="priority"/>
+                                <field name="status"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                             <notebook>
                                 <page string="Description">
-                                    <group>
-                                        <field name="description"></field>
-                                    </group>
+                                    <field name="description" placeholder="Add a description..." options="{'colaborative': true}"/>
                                 </page>
                             </notebook>
                         </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="demande_information_view_kanban" model="ir.ui.view">
+            <field name="name">Demande Information View Kanban</field>
+            <field name="model">demande.information</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="tag_ids" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="demande_information.quick_create_opportunity_form" archivable="false" sample="1" js_class="demande_information_kanban">
+                    <field name="status"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>
+                                            <field name="object"/>
+                                        </strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <span>
+                                            <field name="societe"/>
+                                        </span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span>
+                                            <field name="nom"/>
+                                        </span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span>
+                                            <field name="tag_ids"/>
+                                            <field name="priority" widget="priority"/>
+                                        </span>
+                                    </div>
+                                    <div class="col-7">
+                                        <span>
+                                            <field name="status"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
     </data>

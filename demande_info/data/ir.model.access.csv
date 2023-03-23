@@ -1,3 +1,4 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 access_demande_information,access_test_demande_information,model_demande_information,base.group_user,1,1,1,1
 access_demande_information_tag,access_test_demande_information,model_demande_information_tag,base.group_user,1,1,1,1
+access_demande_information_equipe,access_test_demande_information,model_demande_information_equipe,base.group_user,1,1,1,1
