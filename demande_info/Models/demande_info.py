@@ -20,36 +20,17 @@ class DemandeInformation(models.Model):
     date = fields.Date(required=False, copy=False)
     tag_ids = fields.Many2many("demande.information.tag", string="Tags")
     equipe_id = fields.Many2one("demande.information.equipe", string="Equipe")
+    membre = fields.Many2one("res.users", string='membre')
+    context = fields.Char(required=False)
     status = fields.Selection(
         default='new',
         selection=[('new', 'New'), ('en cours de traitement', 'En Cours De Traitement'), ('traité', 'Traité'),
                    ('assigné', 'Assigné')],
         required=True,)
-    critere = fields.Selection(
-        default='',
-        selection=[('peu important', 'Peu important'), ('moyennement important', 'Moyennement Important'), ('important', 'Important'),('tres important', 'Tres Important')],
-        nocopy=True,
-    )
+
     priority = fields.Selection(
         AVAILABLE_PRIORITIES, string='Priority', index=True,
         default=AVAILABLE_PRIORITIES[0][0])
-
-    membre_odoo = fields.Selection(
-        default='',
-        selection=[('pierre', 'Pierre'), ('yann', 'Yann')]
-    )
-
-    membre_tech = fields.Selection(
-        default='',
-        selection=[('hendrick', 'Hendrick'), ('manu', 'Manu')]
-    )
-
-    def equipe_choice(self):
-        for equipe in self:
-            if equipe.id == 'Odoo':
-                return 'membre_odoo',
-            if equipe.id == 'Telecom':
-                return 'membre_tech'
 class DemandeInformationTag(models.Model):
     _name = "demande.information.tag"
     _description = "Demande Information Tag"
@@ -66,3 +47,21 @@ class DemandeInformationEquipe(models.Model):
     name = fields.Char("nom")
 
     _sql_constraints = [('unique_name', 'unique(name)', 'This Team already exist')]
+
+class InheritUsers(models.Model):
+    _inherit = "res.users"
+
+    equipe_id = fields.Many2one("demande.information.equipe", string="equipe")
+
+# class search(models.Model):
+#     _inherit = 'res.partner'
+#     def get_demande(self):
+#         self.ensure_one()
+#         return {
+#             'type': 'ir.actions.act_window',
+#             'name': 'Demande',
+#             'view_mode': 'tree',
+#             'res_model': 'contacts.demande',
+#             'domain': [('contacts_id', '=', self.id)],
+#             'context': "{'create': False}"
+#         }

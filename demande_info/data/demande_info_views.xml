@@ -14,6 +14,7 @@
             <field name="context">{'search_default_group_equipe_id': 1}</field>
             <field name="context">{'search_default_group_status': 1}</field>
             <field name="context">{'search_default_group_tel': 1}</field>
+            <field name="context"></field>
         </record>
 
         <record id="demande_information_search" model="ir.ui.view">
@@ -30,8 +31,31 @@
                     <filter name="equipe_id" string="Equipe" icon="terp-partner" context="{'group_by':'equipe_id'}"/>
                     <filter name="status" string="Status" icon="terp-partner" context="{'group_by':'status'}"/>
                     <filter name="tel" string="Tel" icon="terp-partner" context="{'group_by':'tel'}"/>
-
                 </search>
+            </field>
+        </record>
+
+        <record id="demande_information_search_membre" model="ir.ui.view">
+            <field name="name">Demande Information Search Membre</field>
+            <field name="model">demande.information</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter name="membre" string="Membre" domain="[('context', '=', equipe_id)]"/>
+                    <field name="equipe_id" string="equipe_id" filter_domain="[('equipe_id', 'ilike', self)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="demande_information_inherit" model="ir.ui.view">
+            <field name="name">Demande Information Inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='preferences']" position="after">
+                    <page name="Equipe">
+                        <field name="equipe_id"/>
+                    </page>
+                </xpath>
             </field>
         </record>
 
@@ -68,10 +92,12 @@
                             </group>
                             <group colspan="2">
                                 <field name="object"/>
-                                <field name="equipe_id"/>
                                 <field name="priority" widget="priority"/>
                                 <field name="status"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="equipe_id"/>
+                                <field name="membre" attrs="{'invisible': [('equipe_id', '=', False)]}"
+                                       domain="[('equipe_id', '=', equipe_id)]"/>
                             </group>
                             <notebook>
                                 <page string="Description">
@@ -88,7 +114,7 @@
             <field name="name">Demande Information View Kanban</field>
             <field name="model">demande.information</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="tag_ids" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="demande_information.quick_create_opportunity_form" archivable="false" sample="1" js_class="demande_information_kanban">
+                <kanban default_group_by="status" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="demande_information.quick_create_opportunity_form" archivable="false" sample="1" js_class="demande_information_kanban">
                     <field name="status"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -120,6 +146,26 @@
                                             <field name="status"/>
                                         </span>
                                     </div>
+                                    <div t-if="record.status.raw_value == 'assigné'" class="col-6">
+                                        <span>
+                                            <field name="equipe_id"/>
+                                        </span>
+                                    </div>
+                                    <div t-if="record.status.raw_value == 'assigné'" class="col-6">
+                                        <span>
+                                            <field name="membre"/>
+                                        </span>
+                                    </div>
+                                    <div t-if="record.status.raw_value == 'traité'" class="col-6">
+                                        <span>
+                                            <field name="equipe_id"/>
+                                        </span>
+                                    </div>
+                                    <div t-if="record.status.raw_value == 'traité'" class="col-6">
+                                        <span>
+                                            <field name="membre"/>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </t>
@@ -127,5 +173,19 @@
                 </kanban>
             </field>
         </record>
+
+<!--        <record id="contacts_demande_smart_button" model="ir.ui.view">-->
+<!--            <field name="name">contacts.demande.view.buttons</field>-->
+<!--            <field name="model">res.partner</field>-->
+<!--            <field name="inherit_id" ref="base.view_partner_form" />-->
+<!--            <field name="arch" type="xml">-->
+<!--                <div name="button_box" position="inside">-->
+<!--                    <button class="oe_stat_button" type="object" name="get_demande"-->
+<!--                        icon="fa-question-circle">-->
+<!--                        <field string="Demande" name="contacts_demande" widget="statinfo"/>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </field>-->
+<!--        </record>-->
     </data>
 </odoo>

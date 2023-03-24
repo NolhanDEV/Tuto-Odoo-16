@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-    <menuitem id="demande_information_menu_root" name="Demande Information">
+    <menuitem name="Demande Info" id="my_menu" web_icon="demande_info,static/description/icon.png">
         <menuitem id="demande_information_advertisement_menu" name="Advertisement" sequence="0" >
             <menuitem id="demande_information_model_menu_action" action="demande_information_action"/>
         </menuitem>
