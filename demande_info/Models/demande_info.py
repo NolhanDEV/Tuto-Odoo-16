@@ -22,6 +22,7 @@ class DemandeInformation(models.Model):
     equipe_id = fields.Many2one("demande.information.equipe", string="Equipe")
     membre = fields.Many2one("res.users", string='membre')
     context = fields.Char(required=False)
+    contact_id = fields.Many2one("res.partner", "Contact", copy=False)
     status = fields.Selection(
         default='new',
         selection=[('new', 'New'), ('en cours de traitement', 'En Cours De Traitement'), ('traité', 'Traité'),
@@ -31,6 +32,17 @@ class DemandeInformation(models.Model):
     priority = fields.Selection(
         AVAILABLE_PRIORITIES, string='Priority', index=True,
         default=AVAILABLE_PRIORITIES[0][0])
+
+    def contact_page(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Contact Page',
+            'view_mode': 'tree',
+            'res_model': 'res.partner',
+            'domain': [('contacts_id', '=', self.id)],
+            'context': "{'create': True}"
+        }
+
 class DemandeInformationTag(models.Model):
     _name = "demande.information.tag"
     _description = "Demande Information Tag"
@@ -53,15 +65,7 @@ class InheritUsers(models.Model):
 
     equipe_id = fields.Many2one("demande.information.equipe", string="equipe")
 
-# class search(models.Model):
-#     _inherit = 'res.partner'
-#     def get_demande(self):
-#         self.ensure_one()
-#         return {
-#             'type': 'ir.actions.act_window',
-#             'name': 'Demande',
-#             'view_mode': 'tree',
-#             'res_model': 'contacts.demande',
-#             'domain': [('contacts_id', '=', self.id)],
-#             'context': "{'create': False}"
-#         }
+class InheritContact(models.Model):
+    _inherit = 'res.partner'
+
+    contact_id = fields.Many2one("demande.information", string="contact")

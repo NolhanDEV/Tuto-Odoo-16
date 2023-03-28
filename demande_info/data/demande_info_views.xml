@@ -80,6 +80,14 @@
             <field name="model">demande.information</field>
             <field name="arch" type="xml">
                 <form string="Test">
+                    <header>
+                        <div name="button_box" position="inside">
+                            <button class="oe_stat_button" type="object" name="contact_page"
+                                icon="fa-user">
+<!--                                <field string="Contact Page" name="contact_id" widget="statinfo"/>-->
+                            </button>
+                        </div>
+                    </header>
                     <sheet>
                         <group colspan="4" col="4">
                             <group colspan="2">
@@ -180,9 +188,9 @@
 <!--            <field name="inherit_id" ref="base.view_partner_form" />-->
 <!--            <field name="arch" type="xml">-->
 <!--                <div name="button_box" position="inside">-->
-<!--                    <button class="oe_stat_button" type="object" name="get_demande"-->
+<!--                    <button class="oe_stat_button" type="object" name="contact_page"-->
 <!--                        icon="fa-question-circle">-->
-<!--                        <field string="Demande" name="contacts_demande" widget="statinfo"/>-->
+<!--                        <field string="Contact Page" name="contact.page" widget="statinfo"/>-->
 <!--                    </button>-->
 <!--                </div>-->
 <!--            </field>-->
