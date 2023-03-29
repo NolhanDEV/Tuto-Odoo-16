@@ -6,14 +6,14 @@
             <field name="res_model">demande.information</field>
             <field name="view_mode">tree,form,kanban</field>
             <field name="context">{'search_default_group_nom': 1}</field>
-            <field name="context">{'search_default_group_societe': 1}</field>
+            <field name="context">{'search_default_group_company': 1}</field>
             <field name="context">{'search_default_group_date': 1}</field>
-            <field name="context">{'search_default_group_mail': 1}</field>
+            <field name="context">{'search_default_group_email': 1}</field>
             <field name="context">{'search_default_group_object': 1}</field>
             <field name="context">{'search_default_group_priority': 1}</field>
             <field name="context">{'search_default_group_equipe_id': 1}</field>
             <field name="context">{'search_default_group_status': 1}</field>
-            <field name="context">{'search_default_group_tel': 1}</field>
+            <field name="context">{'search_default_group_phone': 1}</field>
             <field name="context"></field>
         </record>
 
@@ -23,14 +23,14 @@
             <field name="arch" type="xml">
                 <search>
                     <filter name="nom" string="Nom" icon="terp-partner" context="{'group_by':'nom'}"/>
-                    <filter name="societe" string="Societe" icon="terp-partner" context="{'group_by':'societe'}"/>
+                    <filter name="company" string="Company" icon="terp-partner" context="{'group_by':'company'}"/>
                     <filter name="date" string="Date" icon="terp-partner" context="{'group_by':'date'}"/>
-                    <filter name="mail" string="Mail" icon="terp-partner" context="{'group_by':'mail'}"/>
+                    <filter name="email" string="Email" icon="terp-partner" context="{'group_by':'email'}"/>
                     <filter name="object" string="Object" icon="terp-partner" context="{'group_by':'object'}"/>
                     <filter name="priority" string="Priority" icon="terp-partner" context="{'group_by':'priority'}"/>
                     <filter name="equipe_id" string="Equipe" icon="terp-partner" context="{'group_by':'equipe_id'}"/>
                     <filter name="status" string="Status" icon="terp-partner" context="{'group_by':'status'}"/>
-                    <filter name="tel" string="Tel" icon="terp-partner" context="{'group_by':'tel'}"/>
+                    <filter name="phone" string="Phone" icon="terp-partner" context="{'group_by':'phone'}"/>
                 </search>
             </field>
         </record>
@@ -67,9 +67,9 @@
                     <field name="object"/>
                     <field name="nom"/>
                     <field name="prenom"/>
-                    <field name="societe"/>
-                    <field name="tel"/>
-                    <field name="mail"/>
+                    <field name="company"/>
+                    <field name="phone"/>
+                    <field name="email"/>
                     <field name="status"/>
                 </tree>
             </field>
@@ -81,12 +81,10 @@
             <field name="arch" type="xml">
                 <form string="Test">
                     <header>
-                        <div name="button_box" position="inside">
-                            <button class="oe_stat_button" type="object" name="contact_page"
+                        <button class="oe_button" type="object" name="contact_button"
                                 icon="fa-user">
-<!--                                <field string="Contact Page" name="contact_id" widget="statinfo"/>-->
-                            </button>
-                        </div>
+<!--                            <field string="Contact Page" name="contact_id" widget="statinfo"/>-->
+                        </button>
                     </header>
                     <sheet>
                         <group colspan="4" col="4">
@@ -94,9 +92,9 @@
                                 <field name="nom"/>
                                 <field name="prenom"/>
                                 <field name="date"/>
-                                <field name="societe"/>
-                                <field name="tel" widget="phone" options="{'enable_sms':false}"/>
-                                <field name="mail" widget="email"/>
+                                <field name="company"/>
+                                <field name="phone" widget="phone" options="{'enable_sms':false}"/>
+                                <field name="email" widget="email"/>
                             </group>
                             <group colspan="2">
                                 <field name="object"/>
@@ -135,7 +133,7 @@
                                     </div>
                                     <div class="col-6">
                                         <span>
-                                            <field name="societe"/>
+                                            <field name="company"/>
                                         </span>
                                     </div>
                                     <div class="col-6">

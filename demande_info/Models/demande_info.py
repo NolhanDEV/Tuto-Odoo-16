@@ -13,16 +13,16 @@ class DemandeInformation(models.Model):
     nom = fields.Char(required=True)
     prenom = fields.Char(required=True)
     object = fields.Char(required=True)
-    mail = fields.Char(required=True)
-    societe = fields.Char(required=True)
-    tel = fields.Char(required=True)
+    email = fields.Char(required=True)
+    company = fields.Char(required=True)
+    phone = fields.Char(required=True)
     description = fields.Char(required=False)
     date = fields.Date(required=False, copy=False)
     tag_ids = fields.Many2many("demande.information.tag", string="Tags")
     equipe_id = fields.Many2one("demande.information.equipe", string="Equipe")
     membre = fields.Many2one("res.users", string='membre')
     context = fields.Char(required=False)
-    contact_id = fields.Many2one("res.partner", "Contact", copy=False)
+    contact_id = fields.Many2one("res.partner", "Contact", nocopy=True)
     status = fields.Selection(
         default='new',
         selection=[('new', 'New'), ('en cours de traitement', 'En Cours De Traitement'), ('traité', 'Traité'),
@@ -33,16 +33,51 @@ class DemandeInformation(models.Model):
         AVAILABLE_PRIORITIES, string='Priority', index=True,
         default=AVAILABLE_PRIORITIES[0][0])
 
-    def contact_page(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Contact Page',
-            'view_mode': 'tree',
-            'res_model': 'res.partner',
-            'domain': [('contacts_id', '=', self.id)],
-            'context': "{'create': True}"
-        }
+    def contact_page(self, contact):
+        act = {
+                'type': 'ir.actions.act_window',
+                'name': 'Contact Page',
+                'view_mode': 'form',
+                'res_model': 'res.partner',
+                'res_id': contact.id,
+                'views': [[self.env.ref('base.view_partner_form').id, 'form']],
+            }
+        return act
 
+    def contact_create(self):
+        company = self.env["res.partner"].search(
+            [
+                ('name', '=', self.company)
+            ]
+        )
+        if not company:
+            company = self.env["res.partner"].create(
+                {
+                    "name": self.company,
+                })
+        contact = self.env["res.partner"].create(
+            {
+                "name": self.nom + " " + self.prenom,
+                "email": self.email,
+                "phone": self.phone,
+                "parent_id": company.id,
+            })
+        return contact
+
+    def contact_button(self):
+
+        contact = self.env['res.partner'].search(
+            [
+                ('name', '=', self.nom + " " + self.prenom),
+                ('email', '=', self.email),
+                ('phone', '=', self.phone),
+                # ('parent_id', '=', self.company)
+            ]
+        )
+        if contact:
+            return self.contact_page(contact)
+        else:
+            self.contact_create( )
 class DemandeInformationTag(models.Model):
     _name = "demande.information.tag"
     _description = "Demande Information Tag"
