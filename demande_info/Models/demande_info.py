@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 AVAILABLE_PRIORITIES = [
     ('0', 'peu important'),
     ('1', 'moyennement important'),
@@ -10,8 +10,7 @@ class DemandeInformation(models.Model):
     _name = "demande.information"
     _description = "Demande Information"
 
-    nom = fields.Char(required=True)
-    prenom = fields.Char(required=True)
+    name_id = fields.Many2one("res.partner", "Name", required=True)
     object = fields.Char(required=True)
     email = fields.Char(required=True)
     company = fields.Char(required=True)
@@ -22,7 +21,7 @@ class DemandeInformation(models.Model):
     equipe_id = fields.Many2one("demande.information.equipe", string="Equipe")
     membre = fields.Many2one("res.users", string='membre')
     context = fields.Char(required=False)
-    contact_id = fields.Many2one("res.partner", "Contact", nocopy=True)
+    contact_id = fields.Many2one("res.partner", "Name", nocopy=True)
     status = fields.Selection(
         default='new',
         selection=[('new', 'New'), ('en cours de traitement', 'En Cours De Traitement'), ('traité', 'Traité'),
@@ -57,7 +56,7 @@ class DemandeInformation(models.Model):
                 })
         contact = self.env["res.partner"].create(
             {
-                "name": self.nom + " " + self.prenom,
+                "name": self.name_id,
                 "email": self.email,
                 "phone": self.phone,
                 "parent_id": company.id,
@@ -68,7 +67,7 @@ class DemandeInformation(models.Model):
 
         contact = self.env['res.partner'].search(
             [
-                ('name', '=', self.nom + " " + self.prenom),
+                ('name', '=', self.name_id),
                 ('email', '=', self.email),
                 ('phone', '=', self.phone),
                 # ('parent_id', '=', self.company)
@@ -77,7 +76,13 @@ class DemandeInformation(models.Model):
         if contact:
             return self.contact_page(contact)
         else:
-            self.contact_create( )
+            self.contact_create()
+
+    @api.onchange('name_id')
+    def _onchange_contact_id(self):
+        self.company = self.name_id.parent_id.name
+        self.phone = self.name_id.phone
+        self.email = self.name_id.email
 class DemandeInformationTag(models.Model):
     _name = "demande.information.tag"
     _description = "Demande Information Tag"
@@ -91,7 +96,7 @@ class DemandeInformationEquipe(models.Model):
     _name = "demande.information.equipe"
     _description = "Demande Information Equipe"
 
-    name = fields.Char("nom")
+    name = fields.Char("name_id")
 
     _sql_constraints = [('unique_name', 'unique(name)', 'This Team already exist')]
 
@@ -104,3 +109,4 @@ class InheritContact(models.Model):
     _inherit = 'res.partner'
 
     contact_id = fields.Many2one("demande.information", string="contact")
+    name_id = fields.Many2one("demande.information", string="name")

@@ -5,7 +5,7 @@
             <field name="name">Demande Information</field>
             <field name="res_model">demande.information</field>
             <field name="view_mode">tree,form,kanban</field>
-            <field name="context">{'search_default_group_nom': 1}</field>
+            <field name="context">{'search_default_group_name_id': 1}</field>
             <field name="context">{'search_default_group_company': 1}</field>
             <field name="context">{'search_default_group_date': 1}</field>
             <field name="context">{'search_default_group_email': 1}</field>
@@ -22,7 +22,7 @@
             <field name="model">demande.information</field>
             <field name="arch" type="xml">
                 <search>
-                    <filter name="nom" string="Nom" icon="terp-partner" context="{'group_by':'nom'}"/>
+                    <filter name="name_id" string="Name" icon="terp-partner" context="{'group_by':'name_id'}"/>
                     <filter name="company" string="Company" icon="terp-partner" context="{'group_by':'company'}"/>
                     <filter name="date" string="Date" icon="terp-partner" context="{'group_by':'date'}"/>
                     <filter name="email" string="Email" icon="terp-partner" context="{'group_by':'email'}"/>
@@ -65,8 +65,8 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="object"/>
-                    <field name="nom"/>
-                    <field name="prenom"/>
+                    <field name="name_id"/>
+<!--                    <field name="prenom"/>-->
                     <field name="company"/>
                     <field name="phone"/>
                     <field name="email"/>
@@ -89,8 +89,7 @@
                     <sheet>
                         <group colspan="4" col="4">
                             <group colspan="2">
-                                <field name="nom"/>
-                                <field name="prenom"/>
+                                <field name="name_id"/>
                                 <field name="date"/>
                                 <field name="company"/>
                                 <field name="phone" widget="phone" options="{'enable_sms':false}"/>
@@ -138,7 +137,7 @@
                                     </div>
                                     <div class="col-6">
                                         <span>
-                                            <field name="nom"/>
+                                            <field name="name_id"/>
                                         </span>
                                     </div>
                                     <div class="col-6">
